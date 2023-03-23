@@ -11,6 +11,7 @@ scriptVersion="1.0.2"
 # This section sets up the basic variables, functions, and validation
 #
 ##################################################################
+
 #This is the help dialog explaining the options and how to use
 help_message()
 {
@@ -139,6 +140,12 @@ if [ "$1" = "--version" ]; then
 	echo "Renew.sh version: $scriptVersion"
 	echo "SwiftDialog Version: $($dialogPath --version)"
 	exit 0
+elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	debug_message "--help used. Printing help message and exiting."
+	help_message
+	exit 0
+elif [ "$1" = "" ]; then
+	debug_message "No testing arguments detected during execution."
 fi
 
 if [ "$1" = "--help" ]; then
@@ -150,6 +157,7 @@ fi
 #Exit if there is no mobileconfig payload
 if [ ! -f "$renewConfig" ]; then
 	log_message "Configuration profile missing. Exiting."
+	echo "Configuration profile missing. Exiting."
 	exit 0
 fi
 
@@ -167,7 +175,6 @@ else
 	echo "ERROR: Failed to properly right to $userDeferralProfile - Exiting."
 	exit 2
 fi
-
 
 ##################################################################
 #
@@ -213,8 +220,10 @@ elif [ "$1" = "--reset" ]; then
 	log_message "--reset used. Resetting deferral profile and exiting."
 	reset_deferral_profile
 	exit 0
+
 elif [ "$1" = "" ]; then
 	debug_message "No testing arguments detected during execution."
+
 else
 	debug_message "ERROR: Invalid arguments given. Printing help message and exiting."
 	help_message
